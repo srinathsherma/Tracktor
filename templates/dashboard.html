@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — Issue Tracker{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <h1>Dashboard</h1>
+    <a href="/" class="btn btn-secondary">View all tickets</a>
+</div>
+
+<!-- ── Summary cards ── -->
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
+
+    <div class="card" style="text-align: center; border-top: 4px solid #C0392B;">
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">🔴 Critical open</p>
+        <p style="font-size: 48px; font-weight: bold; color: #C0392B;">{{ total_critical }}</p>
+        <a href="/?priority=critical&status=open" style="font-size: 12px; color: var(--gold-dark);">View tickets →</a>
+    </div>
+
+    <div class="card" style="text-align: center; border-top: 4px solid #E67E22;">
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">📋 Total open</p>
+        <p style="font-size: 48px; font-weight: bold; color: #E67E22;">{{ total_open }}</p>
+        <a href="/?status=open" style="font-size: 12px; color: var(--gold-dark);">View tickets →</a>
+    </div>
+
+    <div class="card" style="text-align: center; border-top: 4px solid #E67E22;">
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">🔧 In progress</p>
+        <p style="font-size: 48px; font-weight: bold; color: #E67E22;">{{ total_in_progress }}</p>
+        <a href="/?status=in_progress" style="font-size: 12px; color: var(--gold-dark);">View tickets →</a>
+    </div>
+
+    <div class="card" style="text-align: center; border-top: 4px solid #27AE60;">
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">✅ Closed today</p>
+        <p style="font-size: 48px; font-weight: bold; color: #27AE60;">{{ closed_today }}</p>
+        <a href="/?status=closed" style="font-size: 12px; color: var(--gold-dark);">View tickets →</a>
+    </div>
+
+    <div class="card" style="text-align: center; border-top: 4px solid #2980B9;">
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">✅ Total closed</p>
+        <p style="font-size: 48px; font-weight: bold; color: #2980B9;">{{ total_closed }}</p>
+        <a href="/?status=closed" style="font-size: 12px; color: var(--gold-dark);">View tickets →</a>
+    </div>
+
+    <div class="card" style="text-align: center; border-top: 4px solid #B7950B;">
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">⚠️ Unassigned</p>
+        <p style="font-size: 48px; font-weight: bold; color: #B7950B;">{{ unassigned }}</p>
+        <a href="/" style="font-size: 12px; color: var(--gold-dark);">View tickets →</a>
+    </div>
+
+</div>
+
+<!-- ── Bottom three panels ── -->
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+
+    <!-- Tickets by priority -->
+    <div class="card">
+        <h2 style="font-size: 16px; color: var(--gold-dark); margin-bottom: 16px;">
+            Open tickets by priority
+        </h2>
+        {% if by_priority %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Priority</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in by_priority %}
+                <tr>
+                    <td>
+                        <span class="badge badge-{{ row.priority }}">
+                            {{ row.priority.title() }}
+                        </span>
+                    </td>
+                    <td><strong>{{ row.count }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color: var(--muted); font-size: 14px;">No open tickets.</p>
+        {% endif %}
+    </div>
+
+    <!-- Tickets by category -->
+    <div class="card">
+        <h2 style="font-size: 16px; color: var(--gold-dark); margin-bottom: 16px;">
+            Open tickets by category
+        </h2>
+        {% if by_category %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in by_category %}
+                <tr>
+                    <td>{{ row.name }}</td>
+                    <td><strong>{{ row.count }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color: var(--muted); font-size: 14px;">No open tickets.</p>
+        {% endif %}
+    </div>
+
+    <!-- Tickets by technician -->
+    <div class="card">
+        <h2 style="font-size: 16px; color: var(--gold-dark); margin-bottom: 16px;">
+            Open tickets by technician
+        </h2>
+        {% if by_technician %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Technician</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in by_technician %}
+                <tr>
+                    <td>{{ row.name }}</td>
+                    <td><strong>{{ row.count }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color: var(--muted); font-size: 14px;">No open tickets.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<!-- ── Recent critical tickets ── -->
+<div class="card">
+    <h2 style="font-size: 16px; color: #C0392B; margin-bottom: 16px;">
+        🔴 Recent critical tickets
+    </h2>
+    {% if critical_tickets %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Technician</th>
+                <th>Date Requested</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in critical_tickets %}
+            <tr>
+                <td>{{ ticket.id }}</td>
+                <td>
+                    <a href="/tickets/{{ ticket.id }}"
+                       style="color: var(--gold-dark); font-weight: bold;">
+                        {{ ticket.title }}
+                    </a>
+                </td>
+                <td>
+                    <span class="badge badge-{{ ticket.status }}">
+                        {{ ticket.status.replace('_', ' ').title() }}
+                    </span>
+                </td>
+                <td>{{ ticket.technician.name if ticket.technician else '— unassigned —' }}</td>
+                <td>{{ ticket.date_requested.strftime('%d %b %Y') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: var(--muted); font-size: 14px;">
+        🎉 No critical tickets open right now!
+    </p>
+    {% endif %}
+</div>
+
+{% endblock %}

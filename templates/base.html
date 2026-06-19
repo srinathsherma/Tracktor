@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Issue Tracker{% endblock %}</title>
+    <style>
+        /* ── Reset ── */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        /* ── Root colours ── */
+        :root {
+            --gold:        #DAA520;
+            --gold-dark:   #B8860B;
+            --gold-light:  #FFD966;
+            --gold-pale:   #FFF8E1;
+            --dark:        #2C2C2C;
+            --text:        #333333;
+            --muted:       #777777;
+            --white:       #FFFFFF;
+            --border:      #E0C050;
+            --shadow:      rgba(180, 130, 0, 0.15);
+        }
+
+        /* ── Page ── */
+        body {
+            font-family: Arial, sans-serif;
+            background: var(--gold-pale);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── Top navigation bar ── */
+        .navbar {
+            background: var(--gold-dark);
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+            box-shadow: 0 2px 6px var(--shadow);
+        }
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--white);
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+        .navbar-links {
+            display: flex;
+            gap: 8px;
+        }
+        .navbar-links a {
+            color: var(--gold-light);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 6px 14px;
+            border-radius: 6px;
+            transition: background 0.15s;
+        }
+        .navbar-links a:hover {
+            background: rgba(255,255,255,0.15);
+            color: var(--white);
+        }
+
+        /* ── Page wrapper ── */
+        .page {
+            max-width: 1100px;
+            margin: 36px auto;
+            padding: 0 24px;
+        }
+
+        /* ── Page heading ── */
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        h1 {
+            font-size: 26px;
+            color: var(--gold-dark);
+            letter-spacing: 0.3px;
+        }
+        .subheading {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* ── Card ── */
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 28px 32px;
+            box-shadow: 0 2px 8px var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        /* ── Table ── */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        th {
+            background: var(--gold-dark);
+            color: var(--white);
+            padding: 13px 16px;
+            text-align: left;
+            font-size: 13px;
+            letter-spacing: 0.3px;
+        }
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #F5E88A;
+            font-size: 14px;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--gold-pale); }
+
+        /* ── Buttons ── */
+        .btn {
+            padding: 9px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary {
+            background: var(--gold-dark);
+            color: var(--white);
+        }
+        .btn-primary:hover { background: #9A7209; }
+        .btn-success {
+            background: #27AE60;
+            color: var(--white);
+        }
+        .btn-success:hover { background: #219A52; }
+        .btn-danger {
+            background: #E74C3C;
+            color: var(--white);
+        }
+        .btn-danger:hover { background: #C0392B; }
+        .btn-secondary {
+            background: #F0E08A;
+            color: var(--dark);
+        }
+        .btn-secondary:hover { background: #E8D070; }
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        /* ── Status badges ── */
+        .badge {
+            padding: 4px 11px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.3px;
+        }
+        .badge-open        { background: #FDECEA; color: #C0392B; }
+        .badge-in_progress { background: #FEF9E7; color: #B7950B; }
+        .badge-closed      { background: #EAFAF1; color: #1E8449; }
+
+
+        /* ── Priority badges ── */
+        .badge-critical { background: #C0392B; color: #FFFFFF; }
+        .badge-high     { background: #E67E22; color: #FFFFFF; }
+        .badge-medium   { background: #2980B9; color: #FFFFFF; }
+        .badge-low      { background: #27AE60; color: #FFFFFF; }
+
+        
+        /* ── Form elements ── */
+        .form-group { margin-bottom: 20px; }
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: var(--muted);
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--gold-pale);
+            color: var(--text);
+        }
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--gold-dark);
+            background: var(--white);
+        }
+        textarea { resize: vertical; }
+
+        /* ── Field rows (view page) ── */
+        .field {
+            display: flex;
+            gap: 16px;
+            padding: 13px 0;
+            border-bottom: 1px solid #F5E88A;
+            font-size: 14px;
+        }
+        .field:last-child { border-bottom: none; }
+        .field-label {
+            width: 160px;
+            flex-shrink: 0;
+            font-weight: bold;
+            color: var(--muted);
+            font-size: 13px;
+            padding-top: 1px;
+        }
+        .field-value { flex: 1; line-height: 1.6; }
+
+        /* ── Error box ── */
+        .error {
+            background: #FDECEA;
+            color: #C0392B;
+            border: 1px solid #F5C6C6;
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* ── Breadcrumb ── */
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+        .breadcrumb a {
+            color: var(--gold-dark);
+            text-decoration: none;
+        }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        /* ── Empty state ── */
+        .empty {
+            text-align: center;
+            padding: 60px;
+            color: var(--muted);
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        /* ── Optional label ── */
+        .optional {
+            font-weight: normal;
+            color: #BBB;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation bar -->
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">🛠 Issue Tracker</a>
+        <div class="navbar-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/">Tickets</a>
+            <a href="/technicians">Technicians</a>
+            <a href="/categories">Categories</a>
+        </div>
+    </nav>
+
+    <!-- Page content -->
+    <div class="page">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+</html>

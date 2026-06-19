@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}New Ticket — Issue Tracker{% endblock %}
+
+{% block content %}
+<div class="breadcrumb"><a href="/">← Back to tickets</a></div>
+<div class="page-heading"><h1>New Ticket</h1></div>
+
+<div class="card">
+    <form method="POST" action="/tickets/new">
+
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title"
+                   placeholder="Short summary of the issue" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" style="height:120px"
+                      placeholder="Describe the issue in detail..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority">
+                <option value="low">🟢 Low — when time permits</option>
+                <option value="medium" selected>🔵 Medium — normal priority</option>
+                <option value="high">🟠 High — urgent but not blocking</option>
+                <option value="critical">🔴 Critical — needs immediate attention</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="category_id">
+                Category <span class="optional">(optional)</span>
+            </label>
+            <select id="category_id" name="category_id">
+                <option value="">— uncategorised —</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="technician_id">
+                Assign technician <span class="optional">(optional)</span>
+            </label>
+            <select id="technician_id" name="technician_id">
+                <option value="">— unassigned —</option>
+                {% for tech in technicians %}
+                <option value="{{ tech.id }}">{{ tech.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="notes">
+                Notes <span class="optional">(optional)</span>
+            </label>
+            <textarea id="notes" name="notes" style="height:80px"
+                      placeholder="Any initial notes..."></textarea>
+        </div>
+
+        <div class="btn-row">
+            <button type="submit" class="btn btn-primary">Save Ticket</button>
+            <a href="/" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+# Virtual environment
+ticketor/
+
+# Database file
+*.db
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment variables
+.env
+
+# Editor files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

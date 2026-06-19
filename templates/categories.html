@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Categories — Issue Tracker{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <h1>Categories</h1>
+    <a href="/categories/new" class="btn btn-primary">+ Add category</a>
+</div>
+
+{% if categories %}
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Tickets</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+        <tr>
+            <td>{{ category.id }}</td>
+            <td>{{ category.name }}</td>
+            <td>{{ category.description or '—' }}</td>
+            <td>{{ category.tickets | length }}</td>
+            <td>
+                <form method="POST"
+                      action="/categories/{{ category.id }}/delete"
+                      onsubmit="return confirm('Delete {{ category.name }}? Tickets will become uncategorised.')">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<div class="empty">
+    <p>No categories yet.</p>
+    <br>
+    <a href="/categories/new" class="btn btn-primary">Add your first category</a>
+</div>
+{% endif %}
+{% endblock %}

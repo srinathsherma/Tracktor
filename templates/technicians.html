@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Technicians — Issue Tracker{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <h1>Technicians</h1>
+    <a href="/technicians/new" class="btn btn-primary">+ Add technician</a>
+</div>
+
+{% if technicians %}
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Open tickets</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tech in technicians %}
+        <tr>
+            <td>{{ tech.id }}</td>
+            <td>{{ tech.name }}</td>
+            <td>{{ tech.email }}</td>
+            <td>{{ tech.tickets | selectattr('status', 'ne', 'closed') | list | length }}</td>
+            <td>
+                <form method="POST" action="/technicians/{{ tech.id }}/delete"
+                      onsubmit="return confirm('Delete {{ tech.name }}? Their tickets will become unassigned.')">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<div class="empty">
+    <p>No technicians yet.</p>
+    <br>
+    <a href="/technicians/new" class="btn btn-primary">Add your first technician</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Ticket #{{ ticket.id }} — Issue Tracker{% endblock %}
+
+{% block content %}
+<div class="breadcrumb"><a href="/">← Back to all tickets</a></div>
+<div class="page-heading">
+    <div>
+        <h1>{{ ticket.title }}</h1>
+        <p class="subheading">Ticket #{{ ticket.id }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="field">
+        <div class="field-label">Status</div>
+        <div class="field-value">
+            <span class="badge badge-{{ ticket.status }}">
+                {{ ticket.status.replace('_', ' ').title() }}
+            </span>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="field-label">Priority</div>
+        <div class="field-value">
+            <span class="badge badge-{{ ticket.priority }}">
+                {{ ticket.priority.title() }}
+            </span>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="field-label">Category</div>
+        <div class="field-value">
+            {{ ticket.category.name if ticket.category else '— uncategorised —' }}
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="field-label">Description</div>
+        <div class="field-value">{{ ticket.description }}</div>
+    </div>
+
+    <div class="field">
+        <div class="field-label">Technician</div>
+        <div class="field-value">
+            {{ ticket.technician.name if ticket.technician else '— unassigned —' }}
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="field-label">Notes</div>
+        <div class="field-value">
+            {{ ticket.notes if ticket.notes else '— no notes —' }}
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="field-label">Date requested</div>
+        <div class="field-value">
+            {{ ticket.date_requested.strftime('%d %b %Y, %I:%M %p') }}
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="field-label">Date completed</div>
+        <div class="field-value">
+            {{ ticket.date_completed.strftime('%d %b %Y, %I:%M %p') if ticket.date_completed else '— not yet completed —' }}
+        </div>
+    </div>
+</div>
+
+<div class="btn-row">
+    <a href="/tickets/{{ ticket.id }}/edit" class="btn btn-primary">Edit ticket</a>
+    {% if ticket.status != 'closed' %}
+    <form method="POST" action="/tickets/{{ ticket.id }}/close">
+        <button type="submit" class="btn btn-success">Mark as closed</button>
+    </form>
+    {% endif %}
+    <a href="/" class="btn btn-secondary">Back to list</a>
+</div>
+{% endblock %}

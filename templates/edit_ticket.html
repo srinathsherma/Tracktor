@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Edit Ticket #{{ ticket.id }} — Issue Tracker{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="/tickets/{{ ticket.id }}">← Back to ticket #{{ ticket.id }}</a>
+</div>
+<div class="page-heading"><h1>Edit Ticket #{{ ticket.id }}</h1></div>
+
+<div class="card">
+    <form method="POST" action="/tickets/{{ ticket.id }}/edit">
+
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title"
+                   value="{{ ticket.title }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description"
+                      style="height:120px" required>{{ ticket.description }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+                <option value="open"
+                    {{ 'selected' if ticket.status == 'open' }}>Open</option>
+                <option value="in_progress"
+                    {{ 'selected' if ticket.status == 'in_progress' }}>In Progress</option>
+                <option value="closed"
+                    {{ 'selected' if ticket.status == 'closed' }}>Closed</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority">
+                <option value="low"
+                    {{ 'selected' if ticket.priority == 'low' }}>
+                    🟢 Low — when time permits</option>
+                <option value="medium"
+                    {{ 'selected' if ticket.priority == 'medium' }}>
+                    🔵 Medium — normal priority</option>
+                <option value="high"
+                    {{ 'selected' if ticket.priority == 'high' }}>
+                    🟠 High — urgent but not blocking</option>
+                <option value="critical"
+                    {{ 'selected' if ticket.priority == 'critical' }}>
+                    🔴 Critical — needs immediate attention</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="category_id">
+                Category <span class="optional">(optional)</span>
+            </label>
+            <select id="category_id" name="category_id">
+                <option value="">— uncategorised —</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}"
+                    {{ 'selected' if ticket.category_id == category.id }}>
+                    {{ category.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="technician_id">
+                Assign technician <span class="optional">(optional)</span>
+            </label>
+            <select id="technician_id" name="technician_id">
+                <option value="">— unassigned —</option>
+                {% for tech in technicians %}
+                <option value="{{ tech.id }}"
+                    {{ 'selected' if ticket.technician_id == tech.id }}>
+                    {{ tech.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="notes">
+                Notes <span class="optional">(optional)</span>
+            </label>
+            <textarea id="notes" name="notes"
+                      style="height:80px">{{ ticket.notes or '' }}</textarea>
+        </div>
+
+        <div class="btn-row">
+            <button type="submit" class="btn btn-primary">Save changes</button>
+            <a href="/tickets/{{ ticket.id }}" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </form>
+</div>
+{% endblock %}
