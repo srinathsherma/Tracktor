@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %}Edit {{ technician.name }} — Tracktor{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="/technicians/{{ technician.id }}">← Back to {{ technician.name }}'s profile</a>
+</div>
+<div class="page-heading">
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <img src="{{ gravatar_url(technician.email, 60) }}"
+             alt="{{ technician.name }}"
+             style="width: 60px; height: 60px; border-radius: 50%;
+                    border: 3px solid var(--gold);">
+        <div>
+            <h1>Edit profile</h1>
+            <p class="subheading">{{ technician.name }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/technicians/{{ technician.id }}/edit">
+
+        <!-- ── Basic info ── -->
+        <h2 style="font-size: 15px; color: var(--gold-dark);
+                   margin-bottom: 16px; padding-bottom: 8px;
+                   border-bottom: 1px solid var(--border);">
+            Basic information
+        </h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+                <label for="name">Full name</label>
+                <input type="text" id="name" name="name"
+                       value="{{ technician.name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email"
+                       value="{{ technician.email }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">
+                    Phone number <span class="optional">(optional)</span>
+                </label>
+                <input type="text" id="phone" name="phone"
+                       placeholder="e.g. +61 4XX XXX XXX"
+                       value="{{ technician.phone or '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="job_title">
+                    Job title <span class="optional">(optional)</span>
+                </label>
+                <input type="text" id="job_title" name="job_title"
+                       placeholder="e.g. Senior Technician"
+                       value="{{ technician.job_title or '' }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="department">
+                Department <span class="optional">(optional)</span>
+            </label>
+            <input type="text" id="department" name="department"
+                   placeholder="e.g. Infrastructure, Software, Hardware"
+                   value="{{ technician.department or '' }}">
+        </div>
+
+        <!-- ── Bio ── -->
+        <h2 style="font-size: 15px; color: var(--gold-dark);
+                   margin-bottom: 16px; padding-bottom: 8px;
+                   border-bottom: 1px solid var(--border);">
+            Bio
+        </h2>
+
+        <div class="form-group">
+            <label for="bio">
+                About this technician <span class="optional">(optional)</span>
+            </label>
+            <textarea id="bio" name="bio" style="height: 120px;"
+                      placeholder="Brief description of their skills and expertise...">{{ technician.bio or '' }}</textarea>
+        </div>
+
+        <!-- ── Gravatar note ── -->
+        <div style="background: var(--gold-pale); border: 1px solid var(--border);
+                    border-radius: 8px; padding: 16px; margin-bottom: 24px;
+                    font-size: 13px; color: var(--muted);">
+            🖼 <strong>Profile photo</strong> — Tracktor uses
+            <a href="https://gravatar.com" target="_blank"
+               style="color: var(--gold-dark);">Gravatar</a>
+            for profile photos. To set or change the photo for this technician
+            visit Gravatar and sign up with <strong>{{ technician.email }}</strong>
+        </div>
+
+        <div class="btn-row">
+            <button type="submit" class="btn btn-primary">Save changes</button>
+            <a href="/technicians/{{ technician.id }}"
+               class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </form>
+</div>
+{% endblock %}

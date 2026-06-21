@@ -23,6 +23,11 @@ class Technician(db.Model):
     id    = db.Column(db.Integer, primary_key=True)
     name  = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
+    phone       = db.Column(db.String(20), nullable=True)
+    job_title   = db.Column(db.String(100), nullable=True)
+    department  = db.Column(db.String(100), nullable=True)
+    date_joined = db.Column(db.DateTime, nullable=True)
+    bio         = db.Column(db.Text, nullable=True)
 
     tickets = db.relationship("Ticket", back_populates="technician")
 

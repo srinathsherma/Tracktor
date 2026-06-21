@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% block title %}{{ technician.name }} — Tracktor{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="/technicians">← Back to technicians</a>
+</div>
+
+<!-- ── Profile header card ── -->
+<div class="card" style="margin-bottom: 24px;">
+    <div style="display: flex; gap: 32px; align-items: center;">
+
+        <!-- Gravatar -->
+        <img src="{{ gravatar_url(technician.email, 120) }}"
+             alt="{{ technician.name }}"
+             style="width: 120px; height: 120px; border-radius: 50%;
+                    border: 4px solid var(--gold); flex-shrink: 0;">
+
+        <!-- Name and details -->
+        <div style="flex: 1;">
+            <h1 style="margin-bottom: 4px;">{{ technician.name }}</h1>
+            <p style="font-size: 15px; color: var(--muted); margin-bottom: 8px;">
+                {{ technician.job_title or '— no title set —' }}
+                {% if technician.department %}
+                — {{ technician.department }}
+                {% endif %}
+            </p>
+
+            <!-- Contact details -->
+            <div style="display: flex; gap: 24px; font-size: 13px;
+                        color: var(--muted); margin-bottom: 12px;">
+                <span>📧 {{ technician.email }}</span>
+                {% if technician.phone %}
+                <span>📞 {{ technician.phone }}</span>
+                {% endif %}
+                {% if technician.date_joined %}
+                <span>📅 Joined {{ technician.date_joined.strftime('%d %b %Y') }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Bio -->
+            {% if technician.bio %}
+            <p style="font-size: 14px; color: var(--text);
+                      line-height: 1.6; max-width: 600px;">
+                {{ technician.bio }}
+            </p>
+            {% endif %}
+        </div>
+
+        <!-- Edit button -->
+        <div style="flex-shrink: 0;">
+            <a href="/technicians/{{ technician.id }}/edit"
+               class="btn btn-primary">Edit profile</a>
+        </div>
+
+    </div>
+</div>
+
+<!-- ── Stats cards ── -->
+<div style="display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 16px; margin-bottom: 24px;">
+
+    <div class="card" style="text-align: center;
+                              border-top: 4px solid var(--gold-dark);">
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">
+            📋 Total assigned
+        </p>
+        <p style="font-size: 48px; font-weight: bold; color: var(--gold-dark);">
+            {{ technician.tickets | length }}
+        </p>
+    </div>
+
+    <div class="card" style="text-align: center;
+                              border-top: 4px solid #E67E22;">
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">
+            🔧 Open tickets
+        </p>
+        <p style="font-size: 48px; font-weight: bold; color: #E67E22;">
+            {{ technician.tickets | selectattr('status', 'ne', 'closed') | list | length }}
+        </p>
+    </div>
+
+    <div class="card" style="text-align: center;
+                              border-top: 4px solid #27AE60;">
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">
+            ✅ Closed tickets
+        </p>
+        <p style="font-size: 48px; font-weight: bold; color: #27AE60;">
+            {{ technician.tickets | selectattr('status', 'eq', 'closed') | list | length }}
+        </p>
+    </div>
+
+</div>
+
+<!-- ── Recent tickets ── -->
+<div class="card">
+    <h2 style="font-size: 16px; color: var(--gold-dark); margin-bottom: 16px;">
+        Recent tickets
+    </h2>
+
+    {% if technician.tickets %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Date Requested</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in technician.tickets | sort(attribute='date_requested', reverse=True) %}
+            <tr>
+                <td>{{ ticket.id }}</td>
+                <td>
+                    <a href="/tickets/{{ ticket.id }}"
+                       style="color: var(--gold-dark); font-weight: bold;">
+                        {{ ticket.title }}
+                    </a>
+                </td>
+                <td>
+                    <span class="badge badge-{{ ticket.priority }}">
+                        {{ ticket.priority.title() }}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge badge-{{ ticket.status }}">
+                        {{ ticket.status.replace('_', ' ').title() }}
+                    </span>
+                </td>
+                <td>{{ ticket.date_requested.strftime('%d %b %Y') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <p style="color: var(--muted); font-size: 14px;">
+        No tickets assigned yet.
+    </p>
+    {% endif %}
+</div>
+
+{% endblock %}
