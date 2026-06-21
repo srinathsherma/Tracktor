@@ -1,9 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Issue Tracker{% endblock %}</title>
+    <title>{% block title %}Tracktor{% endblock %}</title>
+
+    <!-- ── Emoji favicon trick ── -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚜</text></svg>">
+
     <style>
         /* ── Reset ── */
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,15 +42,40 @@
             height: 56px;
             box-shadow: 0 2px 6px var(--shadow);
         }
+
+        /* ── Navbar left spacer to help center the brand ── */
+        .navbar-spacer {
+            flex: 1;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        /* ── Centered brand ── */
+        .navbar-brand-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
         .navbar-brand {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
             color: var(--white);
             text-decoration: none;
-            letter-spacing: 0.5px;
-        }
-        .navbar-links {
+            letter-spacing: 1px;
             display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .navbar-brand span.tractor {
+            font-size: 28px;
+        }
+
+        /* ── Navbar right links ── */
+        .navbar-links {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
             gap: 8px;
         }
         .navbar-links a {
@@ -177,14 +204,12 @@
         .badge-in_progress { background: #FEF9E7; color: #B7950B; }
         .badge-closed      { background: #EAFAF1; color: #1E8449; }
 
-
         /* ── Priority badges ── */
         .badge-critical { background: #C0392B; color: #FFFFFF; }
         .badge-high     { background: #E67E22; color: #FFFFFF; }
         .badge-medium   { background: #2980B9; color: #FFFFFF; }
         .badge-low      { background: #27AE60; color: #FFFFFF; }
 
-        
         /* ── Form elements ── */
         .form-group { margin-bottom: 20px; }
         label {
@@ -279,7 +304,13 @@
 
     <!-- Navigation bar -->
     <nav class="navbar">
-        <a href="/" class="navbar-brand">🛠 Issue Tracker</a>
+        <div class="navbar-spacer"></div>
+        <div class="navbar-brand-wrapper">
+            <a href="/" class="navbar-brand">
+                <span class="tractor">🚜</span>
+                Tracktor
+            </a>
+        </div>
         <div class="navbar-links">
             <a href="/dashboard">Dashboard</a>
             <a href="/">Tickets</a>
