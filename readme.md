@@ -297,7 +297,7 @@ it and share it!
 
 Built with ❤️ by Srinath Sherma
 
-🌐 [ssherma.com](https://ssherma.com)
+🌐 [ssherma.com](https://www.ssherma.com)
 🐙 [github.com/srinathsherma](https://github.com/srinathsherma)
 
 ---
@@ -314,5 +314,5 @@ development journey! 🤖
 
 *🚜 Tracktor — built to work as hard as a tractor!*
 
-*👨‍💻 Built by [Srinath Sherma](https://ssherma.com)*
+*👨‍💻 Built by [Srinath Sherma](https://www.ssherma.com)*
 *🤖 Built with [Claude](https://claude.ai) by Anthropic*
