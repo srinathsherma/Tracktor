@@ -54,11 +54,11 @@ ticketor\Scripts\activate
 
 **On Linux or Mac:**
 ```bash
-python -m venv ticketor
-source ticketor/bin/activate
+python -m venv tracktor
+source tracktor/bin/activate
 ```
 
-You should see `(ticketor)` at the start of your command prompt.
+You should see `(tracktor)` at the start of your command prompt.
 
 ### Step 3 — Install dependencies
 
