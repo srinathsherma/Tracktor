@@ -301,5 +301,18 @@ Built with ❤️ by Srinath Sherma
 🐙 [github.com/srinathsherma](https://github.com/srinathsherma)
 
 ---
+---
+
+## 👏 Acknowledgements
+
+This project was built in collaboration with [Claude](https://claude.ai) by 
+Anthropic — an AI assistant that provided patient step by step guidance, 
+code, debugging help and endless encouragement throughout the entire 
+development journey! 🤖
+
+---
 
 *🚜 Tracktor — built to work as hard as a tractor!*
+
+*👨‍💻 Built by [Srinath Sherma](https://ssherma.com)*
+*🤖 Built with [Claude](https://claude.ai) by Anthropic*
